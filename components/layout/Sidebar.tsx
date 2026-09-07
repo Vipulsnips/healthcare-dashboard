@@ -155,7 +155,7 @@ export default function Sidebar() {
                 fontWeight: 600,
               }}
             >
-              Dr. Sarah Wilson
+              Dr. Sarah 
             </Typography>
 
             <Typography
