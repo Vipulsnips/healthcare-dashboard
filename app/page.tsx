@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 
@@ -18,7 +17,6 @@ export default function Home() {
       >
         <Topbar />
 
-        {/* Page content */}
         <Box
           sx={{
             pt: 12,
@@ -30,10 +28,7 @@ export default function Home() {
             Good morning, Dr. Sarah
           </Typography>
 
-          <Typography
-            color="text.secondary"
-            sx={{ mt: 0.5 }}
-          >
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
             Here's your clinical overview for today.
           </Typography>
         </Box>

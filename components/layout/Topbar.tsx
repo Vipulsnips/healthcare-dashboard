@@ -38,23 +38,12 @@ export default function Topbar() {
         }}
       >
         {/* Page title */}
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 600,
-          }}
-        >
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
           Dashboard
         </Typography>
 
         {/* Right side */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           {/* Search */}
           <Box
             sx={{
@@ -87,11 +76,7 @@ export default function Topbar() {
           </Box>
 
           {/* Notifications */}
-          <IconButton
-            sx={{
-              color: "text.secondary",
-            }}
-          >
+          <IconButton sx={{ color: "text.secondary" }}>
             <NotificationsNoneOutlinedIcon />
           </IconButton>
 
