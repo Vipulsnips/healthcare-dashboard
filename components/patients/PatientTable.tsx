@@ -13,62 +13,19 @@ import {
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-const patients = [
-  {
-    name: "Emily Johnson",
-    id: "PT-10245",
-    age: 32,
-    gender: "Female",
-    condition: "Hypertension",
-    lastVisit: "Aug 18",
-    status: "Stable",
-  },
-  {
-    name: "Michael Brown",
-    id: "PT-10312",
-    age: 45,
-    gender: "Male",
-    condition: "Diabetes T2",
-    lastVisit: "Aug 16",
-    status: "Follow-up",
-  },
-  {
-    name: "Olivia Davis",
-    id: "PT-10198",
-    age: 28,
-    gender: "Female",
-    condition: "Asthma",
-    lastVisit: "Aug 14",
-    status: "Stable",
-  },
-  {
-    name: "James Wilson",
-    id: "PT-10087",
-    age: 58,
-    gender: "Male",
-    condition: "Arrhythmia",
-    lastVisit: "Aug 12",
-    status: "Critical",
-  },
-  {
-    name: "Sophia Martinez",
-    id: "PT-10423",
-    age: 39,
-    gender: "Female",
-    condition: "Migraine",
-    lastVisit: "Aug 10",
-    status: "Stable",
-  },
-  {
-    name: "Robert Lee",
-    id: "PT-10356",
-    age: 51,
-    gender: "Male",
-    condition: "High cholesterol",
-    lastVisit: "Aug 08",
-    status: "Follow-up",
-  },
-];
+export type Patient = {
+  name: string;
+  id: string;
+  age: number;
+  gender: string;
+  condition: string;
+  lastVisit: string;
+  status: string;
+};
+
+type PatientTableProps = {
+  patients: Patient[];
+};
 
 function getStatusColor(status: string) {
   if (status === "Stable") {
@@ -91,7 +48,9 @@ function getStatusColor(status: string) {
   };
 }
 
-export default function PatientTable() {
+export default function PatientTable({
+  patients,
+}: PatientTableProps) {
   return (
     <Card
       elevation={0}
@@ -102,8 +61,16 @@ export default function PatientTable() {
         overflow: "hidden",
       }}
     >
-      <TableContainer>
-        <Table>
+      <TableContainer
+        sx={{
+          overflowX: "auto",
+        }}
+      >
+        <Table
+          sx={{
+            minWidth: 900,
+          }}
+        >
           <TableHead>
             <TableRow>
               <TableCell>Patient</TableCell>
@@ -118,48 +85,63 @@ export default function PatientTable() {
           </TableHead>
 
           <TableBody>
-            {patients.map((patient) => (
-              <TableRow key={patient.id} hover>
-                <TableCell>
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {patient.name}
-                  </Typography>
-                </TableCell>
+            {patients.length > 0 ? (
+              patients.map((patient) => (
+                <TableRow key={patient.id} hover>
+                  <TableCell>
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {patient.name}
+                    </Typography>
+                  </TableCell>
 
-                <TableCell>{patient.id}</TableCell>
+                  <TableCell>{patient.id}</TableCell>
 
-                <TableCell>{patient.age}</TableCell>
+                  <TableCell>{patient.age}</TableCell>
 
-                <TableCell>{patient.gender}</TableCell>
+                  <TableCell>{patient.gender}</TableCell>
 
-                <TableCell>{patient.condition}</TableCell>
+                  <TableCell>{patient.condition}</TableCell>
 
-                <TableCell>{patient.lastVisit}</TableCell>
+                  <TableCell>{patient.lastVisit}</TableCell>
 
-                <TableCell>
-                  <Chip
-                    label={patient.status}
-                    size="small"
-                    sx={{
-                      ...getStatusColor(patient.status),
-                      fontWeight: 500,
-                      borderRadius: 1.5,
-                    }}
-                  />
-                </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={patient.status}
+                      size="small"
+                      sx={{
+                        ...getStatusColor(patient.status),
+                        fontWeight: 500,
+                        borderRadius: 1.5,
+                      }}
+                    />
+                  </TableCell>
 
-                <TableCell align="right">
-                  <IconButton size="small">
-                    <MoreHorizIcon fontSize="small" />
-                  </IconButton>
+                  <TableCell align="right">
+                    <IconButton size="small">
+                      <MoreHorizIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  align="center"
+                  sx={{
+                    py: 5,
+                    color: "text.secondary",
+                  }}
+                >
+                  No patients found.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

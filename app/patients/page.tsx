@@ -1,11 +1,97 @@
-import { Box, Button, Typography } from "@mui/material";
+"use client";
+
+import { useMemo, useState } from "react";
+
+import {
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 
 import AppShell from "@/components/layout/AppShell";
 import PatientToolbar from "@/components/patients/PatientToolbar";
 import PatientTable from "@/components/patients/PatientTable";
 import PatientPagination from "@/components/patients/PatientPagination";
 
+const patients = [
+  {
+    name: "Emily Johnson",
+    id: "PT-10245",
+    age: 32,
+    gender: "Female",
+    condition: "Hypertension",
+    lastVisit: "Aug 18",
+    status: "Stable",
+  },
+  {
+    name: "Michael Brown",
+    id: "PT-10312",
+    age: 45,
+    gender: "Male",
+    condition: "Diabetes T2",
+    lastVisit: "Aug 16",
+    status: "Follow-up",
+  },
+  {
+    name: "Olivia Davis",
+    id: "PT-10198",
+    age: 28,
+    gender: "Female",
+    condition: "Asthma",
+    lastVisit: "Aug 14",
+    status: "Stable",
+  },
+  {
+    name: "James Wilson",
+    id: "PT-10087",
+    age: 58,
+    gender: "Male",
+    condition: "Arrhythmia",
+    lastVisit: "Aug 12",
+    status: "Critical",
+  },
+  {
+    name: "Sophia Martinez",
+    id: "PT-10423",
+    age: 39,
+    gender: "Female",
+    condition: "Migraine",
+    lastVisit: "Aug 10",
+    status: "Stable",
+  },
+  {
+    name: "Robert Lee",
+    id: "PT-10356",
+    age: 51,
+    gender: "Male",
+    condition: "High cholesterol",
+    lastVisit: "Aug 08",
+    status: "Follow-up",
+  },
+];
+
 export default function PatientsPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  const filteredPatients = useMemo(() => {
+    const search = searchTerm.toLowerCase().trim();
+
+    return patients.filter((patient) => {
+      const matchesSearch =
+        !search ||
+        patient.name.toLowerCase().includes(search) ||
+        patient.id.toLowerCase().includes(search) ||
+        patient.condition.toLowerCase().includes(search);
+
+      const matchesStatus =
+        statusFilter === "All" ||
+        patient.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [searchTerm, statusFilter]);
+
   return (
     <AppShell pageTitle="Patients">
       <Box
@@ -60,10 +146,20 @@ export default function PatientsPage() {
           </Button>
         </Box>
 
-        <PatientToolbar />
+        {/* Search + Filter */}
+        <PatientToolbar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
+        />
 
-        <PatientTable />
+        {/* Patient Table */}
+        <PatientTable
+          patients={filteredPatients}
+        />
 
+        {/* Pagination */}
         <PatientPagination />
       </Box>
     </AppShell>

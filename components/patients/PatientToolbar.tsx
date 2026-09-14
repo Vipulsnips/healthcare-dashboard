@@ -1,9 +1,51 @@
-import { Box, Button, InputBase } from "@mui/material";
+"use client";
+
+import { useState } from "react";
+
+import {
+  Box,
+  Button,
+  InputBase,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 
-export default function PatientToolbar() {
+type PatientToolbarProps = {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (value: string) => void;
+};
+
+export default function PatientToolbar({
+  searchTerm,
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange,
+}: PatientToolbarProps) {
+  const [anchorEl, setAnchorEl] =
+    useState<null | HTMLElement>(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleFilterChange = (value: string) => {
+    onStatusFilterChange(value);
+    handleClose();
+  };
+
   return (
     <Box
       sx={{
@@ -11,13 +53,16 @@ export default function PatientToolbar() {
         alignItems: "center",
         justifyContent: "space-between",
         mt: 3,
-        mb: 2,
+        mb: 3,
       }}
     >
       {/* Search */}
       <Box
         sx={{
-          width: 320,
+          width: {
+            xs: "100%",
+            sm: 320,
+          },
           height: 42,
           display: "flex",
           alignItems: "center",
@@ -37,6 +82,10 @@ export default function PatientToolbar() {
         />
 
         <InputBase
+          value={searchTerm}
+          onChange={(event) =>
+            onSearchChange(event.target.value)
+          }
           placeholder="Search patients..."
           sx={{
             flex: 1,
@@ -49,6 +98,7 @@ export default function PatientToolbar() {
       <Button
         variant="outlined"
         startIcon={<FilterListOutlinedIcon />}
+        onClick={handleOpen}
         sx={{
           height: 42,
           textTransform: "none",
@@ -56,10 +106,46 @@ export default function PatientToolbar() {
           borderColor: "divider",
           backgroundColor: "background.paper",
           boxShadow: "none",
+          ml: 2,
         }}
       >
         Filter
       </Button>
+
+      {/* Filter Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem
+          selected={statusFilter === "All"}
+          onClick={() => handleFilterChange("All")}
+        >
+          All
+        </MenuItem>
+
+        <MenuItem
+          selected={statusFilter === "Stable"}
+          onClick={() => handleFilterChange("Stable")}
+        >
+          Stable
+        </MenuItem>
+
+        <MenuItem
+          selected={statusFilter === "Follow-up"}
+          onClick={() => handleFilterChange("Follow-up")}
+        >
+          Follow-up
+        </MenuItem>
+
+        <MenuItem
+          selected={statusFilter === "Critical"}
+          onClick={() => handleFilterChange("Critical")}
+        >
+          Critical
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }
