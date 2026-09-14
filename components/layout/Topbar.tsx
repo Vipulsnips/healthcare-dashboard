@@ -10,19 +10,34 @@ import {
   Typography,
 } from "@mui/material";
 
+import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 const drawerWidth = 240;
 
-export default function Topbar() {
+type TopbarProps = {
+  pageTitle: string;
+  onMenuClick: () => void;
+};
+
+export default function Topbar({
+  pageTitle,
+  onMenuClick,
+}: TopbarProps) {
   return (
     <AppBar
       position="fixed"
       elevation={0}
       sx={{
-        width: `calc(100% - ${drawerWidth}px)`,
-        ml: `${drawerWidth}px`,
+        width: {
+          xs: "100%",
+          md: `calc(100% - ${drawerWidth}px)`,
+        },
+        ml: {
+          xs: 0,
+          md: `${drawerWidth}px`,
+        },
         backgroundColor: "background.paper",
         color: "text.primary",
         borderBottom: "1px solid",
@@ -32,22 +47,64 @@ export default function Topbar() {
       <Toolbar
         sx={{
           minHeight: "72px !important",
-          px: 4,
+          px: {
+            xs: 2,
+            md: 4,
+          },
           display: "flex",
           justifyContent: "space-between",
         }}
       >
-        {/* Page title */}
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Dashboard
-        </Typography>
+        {/* Mobile menu */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <IconButton
+            onClick={onMenuClick}
+            sx={{
+              display: {
+                xs: "flex",
+                md: "none",
+              },
+              color: "text.primary",
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            {pageTitle}
+          </Typography>
+        </Box>
 
         {/* Right side */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: {
+              xs: 0.5,
+              md: 1.5,
+            },
+          }}
+        >
           {/* Search */}
           <Box
             sx={{
-              width: 240,
+              width: {
+                xs: 140,
+                sm: 200,
+                md: 240,
+              },
               height: 38,
               display: "flex",
               alignItems: "center",
@@ -75,12 +132,14 @@ export default function Topbar() {
             />
           </Box>
 
-          {/* Notifications */}
-          <IconButton sx={{ color: "text.secondary" }}>
+          <IconButton
+            sx={{
+              color: "text.secondary",
+            }}
+          >
             <NotificationsNoneOutlinedIcon />
           </IconButton>
 
-          {/* Profile */}
           <Avatar
             sx={{
               width: 36,

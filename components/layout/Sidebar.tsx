@@ -9,6 +9,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
@@ -17,89 +19,100 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutlined";
 
+import { usePathname, useRouter } from "next/navigation";
+
 const drawerWidth = 240;
 
 const menuItems = [
   {
     label: "Dashboard",
     icon: <DashboardOutlinedIcon />,
+    path: "/",
   },
   {
     label: "Patients",
     icon: <PeopleOutlineIcon />,
-  },
-  {
-    label: "Appointments",
-    icon: <CalendarTodayOutlinedIcon />,
-  },
-  {
-    label: "Settings",
-    icon: <SettingsOutlinedIcon />,
+    path: "/patients",
   },
 ];
 
-export default function Sidebar() {
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
+type SidebarProps = {
+  mobileOpen: boolean;
+  onClose: () => void;
+};
 
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          borderRight: "1px solid",
-          borderColor: "divider",
-          backgroundColor: "background.paper",
-        },
+export default function Sidebar({
+  mobileOpen,
+  onClose,
+}: SidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(
+    theme.breakpoints.down("md")
+  );
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+
+    if (isMobile) {
+      onClose();
+    }
+  };
+
+  const drawerContent = (
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
+      {/* Logo */}
       <Box
         sx={{
-          height: "100%",
+          height: 72,
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
+          px: 3,
         }}
       >
-        {/* Logo */}
-        <Box
+        <MedicalServicesOutlinedIcon
           sx={{
-            height: 72,
-            display: "flex",
-            alignItems: "center",
-            px: 3,
+            color: "primary.main",
+            mr: 1,
+          }}
+        />
+
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            color: "text.primary",
           }}
         >
-          <MedicalServicesOutlinedIcon
-            sx={{
-              color: "primary.main",
-              mr: 1,
-            }}
-          />
+          MediCare
+        </Typography>
+      </Box>
 
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              color: "text.primary",
-            }}
-          >
-            MediCare
-          </Typography>
-        </Box>
+      <Divider />
 
-        <Divider />
+      {/* Navigation */}
+      <List sx={{ px: 1.5, pt: 2 }}>
+        {menuItems.map((item) => {
+          const isActive = pathname === item.path;
 
-        {/* Navigation */}
-        <List sx={{ px: 1.5, pt: 2 }}>
-          {menuItems.map((item, index) => (
+          return (
             <ListItemButton
               key={item.label}
-              selected={index === 0}
+              selected={isActive}
+              onClick={() => handleNavigation(item.path)}
               sx={{
                 borderRadius: 2,
                 mb: 0.5,
+                cursor: "pointer",
 
                 "&.Mui-selected": {
                   backgroundColor: "#E6F5F2",
@@ -129,7 +142,7 @@ export default function Sidebar() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      fontWeight: index === 0 ? 600 : 500,
+                      fontWeight: isActive ? 600 : 500,
                     }}
                   >
                     {item.label}
@@ -137,36 +150,55 @@ export default function Sidebar() {
                 }
               />
             </ListItemButton>
-          ))}
-        </List>
+          );
+        })}
+      </List>
 
-        {/* Doctor profile */}
-        <Box sx={{ mt: "auto" }}>
-          <Divider />
+      {/* Doctor profile */}
+      <Box sx={{ mt: "auto" }}>
+        <Divider />
 
-          <Box
-            sx={{
-              p: 2,
-            }}
+        <Box sx={{ p: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: 600 }}
           >
-            <Typography
-              variant="body2"
-              sx={{
-                fontWeight: 600,
-              }}
-            >
-              Dr. Sarah 
-            </Typography>
+            Dr. Sarah Wilson
+          </Typography>
 
-            <Typography
-              variant="caption"
-              color="text.secondary"
-            >
-              Cardiologist
-            </Typography>
-          </Box>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            Cardiologist
+          </Typography>
         </Box>
       </Box>
+    </Box>
+  );
+
+  return (
+    <Drawer
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isMobile ? mobileOpen : true}
+      onClose={onClose}
+      ModalProps={{
+        keepMounted: true,
+      }}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          borderRight: "1px solid",
+          borderColor: "divider",
+          backgroundColor: "background.paper",
+        },
+      }}
+    >
+      {drawerContent}
     </Drawer>
   );
 }
