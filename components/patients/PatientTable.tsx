@@ -1,3 +1,7 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import {
   Card,
   Chip,
@@ -51,6 +55,12 @@ function getStatusColor(status: string) {
 export default function PatientTable({
   patients,
 }: PatientTableProps) {
+  const router = useRouter();
+
+  const handlePatientClick = (id: string) => {
+    router.push(`/patients/${id}`);
+  };
+
   return (
     <Card
       elevation={0}
@@ -90,9 +100,24 @@ export default function PatientTable({
                 <TableRow key={patient.id} hover>
                   <TableCell>
                     <Typography
+                      component="button"
+                      onClick={() =>
+                        handlePatientClick(patient.id)
+                      }
                       sx={{
+                        border: "none",
+                        background: "none",
+                        padding: 0,
+                        margin: 0,
+                        cursor: "pointer",
+                        fontFamily: "inherit",
                         fontSize: 14,
                         fontWeight: 600,
+                        color: "text.primary",
+                        textAlign: "left",
+                        "&:hover": {
+                          color: "primary.main",
+                        },
                       }}
                     >
                       {patient.name}
@@ -122,7 +147,12 @@ export default function PatientTable({
                   </TableCell>
 
                   <TableCell align="right">
-                    <IconButton size="small">
+                    <IconButton
+                      size="small"
+                      onClick={() =>
+                        handlePatientClick(patient.id)
+                      }
+                    >
                       <MoreHorizIcon fontSize="small" />
                     </IconButton>
                   </TableCell>
